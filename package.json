@@ -1,0 +1,14 @@
+{
+  "name": "374lab7",
+  "version": "1.0.0",
+  "description": "lab7",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Muhammad Tariq",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
