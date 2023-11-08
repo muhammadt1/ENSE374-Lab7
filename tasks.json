@@ -1,0 +1,59 @@
+[
+    {
+        "_id": "1",
+        "text": "the unclaimed task",
+        "state": "unfinished",
+        "creator":"u1",
+        "isTaskClaimed": false,
+        "claimingUser":null,
+        "isTaskDone": false,
+        "isTaskCleared":false
+    },
+    {
+        "_id": "2",
+        "text": "the task claimed by u1 and unfinished",
+        "state": "unfinished",
+        "creator":"u1",
+        "isTaskClaimed": true,
+        "claimingUser":"u1",
+        "isTaskDone": false,
+        "isTaskCleared":false
+
+    },
+    {
+        "_id": "3",
+        "text": "the task claimed by u2 and unfinished",
+        "state": "unfinished",
+        "creator":"u1",
+        "isTaskClaimed": true,
+        "claimingUser":"u2",
+        "isTaskDone": false,
+        "isTaskCleared":false
+
+        
+    },
+    {
+        "_id": "4",
+        "text": "the task claimed by u1 and finished",
+        "state": "finished",
+        "creator":"u1",
+        "isTaskClaimed": true,
+        "claimingUser":"u1",
+        "isTaskDone": true,
+        "isTaskCleared":false
+
+    },
+    {
+        "_id": "5",
+        "text": "the task claimed by u2 and finished",
+        "state": "finished",
+        "creator":"u1",
+        "isTaskClaimed": true,
+        "claimingUser":"u2",
+        "isTaskDone": true,
+        "isTaskCleared":false
+
+    }
+]
+
+

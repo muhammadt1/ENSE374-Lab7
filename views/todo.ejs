@@ -61,13 +61,16 @@
     <form action = "/addTask" method = "POST">
         <div class ="input-group mb-3">
             <input type = "text" class="form-control border border-gray" placeholder="New Task" id = "task" name = "task"><br>                    
-            <button type="submit" class="btn btn-outline-secondary" onclick="addTask()">Add</button><br>            
+            <input name = "username" value = "<%= username %>">
+
+            <button type="submit" id = "addButton" class="btn btn-outline-secondary">Add</button><br>            
         
         </div>
     </form>
    
-   
-    <button type="submit" class="btn btn-outline-secondary" onclick="remTask()">Remove Complete</button><br>              
+    <form action = "/purge" method = "POST">
+        <button type="submit" id = "remButton" class="btn btn-outline-secondary">Remove Complete</button><br>              
+    </form>
     
 </div>
 

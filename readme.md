@@ -16,4 +16,4 @@
 
 
 * References Include:
-    * *
+    *
