@@ -1,5 +1,7 @@
 const bodyParser = require('body-parser');
 const express = require ( "express" );
+const fs = require( "fs" );
+
 
 // this is a canonical alias to make your life easier, like jQuery to $.
 const app = express();
@@ -19,23 +21,23 @@ app.use(express.static("public"))
 app.use(express.urlencoded({ extended: true})); 
 
 
-var user = [];
-var userActive;
-var taskActive = [];
+let u= [];
+let taskActive = [];
+var userActive = null;
+
+
 
 app.get("/", function (req, res) {
-    res.render("login");
+    res.render("index");
 });
 
 app.get("/todo", function (req, res) {
-    res.render("todo", {username: userActive, tasks: taskActive});
+    userTask();
+    res.render("todo", { username: userActive, tasks: taskActive });
 });
 
 //--------------------------------------------------------------------------------
-function userInfo()
-{
-    u = require('./public/users.json');
-}
+
 
 function userAdd()
 {
@@ -45,9 +47,13 @@ function userAdd()
     });
 }
 
-function userTask()
-{
-    taskActive = require('./public/tasks.json');
+function userTask() {
+    // Initialize taskActive with an empty array in case tasks.json doesn't exist
+    try {
+        taskActive = require('./public/tasks.json');
+    } catch (error) {
+        taskActive = [];
+    }
 }
 
 function add()
@@ -67,11 +73,9 @@ function add()
 
 app.post("/login", (req, res) => {
     userTask();
-    userInfo();
-    user = req.body["Email"];
+    u= req.body["Email"];
     let p = req.body["Password"];
 
-    const fs = require( "fs" );
     fs.readFile ( __dirname + "/public/users.json",
             "utf8", 
             ( err, jsonString ) => {
@@ -83,17 +87,13 @@ app.post("/login", (req, res) => {
     {
         const object = JSON.parse(jsonString);
 
-        console.log( object); // entire users.json
-
         for(var i = 0; i < u.length; i++)
         {
             /*
-            console.log("user: " + user);
-            console.log("loginPassword: " + loginPassword);
-            console.log("TrueEmail: " + object[i].username);
-            console.log("TruePassword: " + object[i].password);
+            console.log("Username is:", object[i].username); 
+            console.log("Password is:", object[i].password);
             */
-            if(user == object[i].username && p == object[i].password)
+            if(u== object[i].username && p == object[i].password)
             {   
                 userActive = object[i].username;
                 console.log("Success, redirecting");
@@ -112,39 +112,46 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-    userTask();
-    userInfo();
-    var isItTrue = 0;
-    var registerUser = req.body["user2"];
-    var registerPassword = req.body["psw2"];
-    var registerAuth = req.body["auth"];
+    const userReg = req.body["EmailSign"];
+    const passReg = req.body["PasswordSign"];
+    const authReg = req.body["Authentication"];
 
-    if(registerAuth == "todo2022")
-    {
-        for(var i = 0; i < u.length; i++)
+    if (authReg === "auth") {
+        userTask();
+        let realUser = false;
+
+        // Check if a user with the same username already exists
+        for (let i = 0; i < u.length; i++) 
         {
-            if(registerUser == u[i].username)
+            if (userReg === u[i].username) 
             {
-                isItTrue = 1;
-                res.redirect("/");
+                realUser = true;
                 break;
             }
         }
-        if(isItTrue != 1)
-        {
-            u.push({"username": registerUser, "password": registerPassword});
-            userActive = registerUser;
+
+        if (realUser != true) {
+            // Create a new user with the provided username and password
+            u.push({ "username": userReg, "password": passReg });
+
+            // Save the updated user list to the JSON file
             userAdd();
 
+            // Set the active user
+            userActive = userReg;
+
+            // Redirect to the "/todo" route
             res.redirect("/todo");
+        } else {
+            // User with the same username exists, redirect back to the registration page
+            res.redirect("/");
         }
-        isItTrue = 0;
-    }
-    else
-    {
+    } else {
+        // Authorization field does not match, redirect back to the registration page
         res.redirect("/");
     }
 });
+
 
 app.get("/logout",(req,res)=>{
     userActive = null;
@@ -157,7 +164,6 @@ app.post("/addtask", (req, res) => {
     const txt = req.body["task"];
     const size = taskActive.length + 1;
 
-    // Create a new task object
     const newTask = 
     {
         "id": size,
@@ -172,8 +178,7 @@ app.post("/addtask", (req, res) => {
 
     taskActive.push(newTask);
 
-    // Save changes to tasks.json
-    add();
+    add(); // Save changes to tasks.json
 
     res.redirect("/todo");
 });
@@ -181,13 +186,13 @@ app.post("/addtask", (req, res) => {
 app.post("/claim", (req, res) => {
     const uname = req.body["username"];
     const st = req.body["state"]; //add name to ejs remember
-    const claim = taskActive.find(task => task.id === st);
+    const t = taskActive.find(t => t.id === st);
 
-    if (claim) 
+    if (t) 
     {
-        claim.claimingUser = uname;
-        claim.isTaskClaimed = false;
-        claim.st = "unfinished";
+        t.claimingUser = uname;
+        t.isTaskClaimed = false;
+        t.st = "unfinished";
 
         add();
 
@@ -199,12 +204,12 @@ app.post("/claim", (req, res) => {
 app.post("/abandon", (req, res) => {
     const uname = req.body["username"];
     const st = req.body["state"]; // Change this to match the name in your EJS template
-    const aband = taskActive.find(task => task.id === st);
+    const t = taskActive.find(t => t.id === st);
 
-    if (aband) {
-        aband.claimingUser = null;
-        aband.isTaskClaimed = false;
-        aband.st = "unclaimed";
+    if (t) {
+        t.claimingUser = null;
+        t.isTaskClaimed = false;
+        t.st = "unclaimed";
 
         // Assuming "add" is a function to save changes
         add();
@@ -218,12 +223,12 @@ app.post("/abandon", (req, res) => {
 app.post("/unfinish", (req, res) => {
     const uname = req.body["username"];
     const st = req.body["state"]; // Change this to match the name in your EJS template
-    const unfin = taskActive.find(task => task.id === st);
+    const t = taskActive.find(t => t.id === st);
 
-    if (unfin) 
+    if (t) 
     {
-        unfin.isTaskDone = false;
-        unfin.st = "unfinished";
+        t.isTaskDone = false;
+        t.st = "unfinished";
 
         // Assuming "add" is a function to save changes
         add();
@@ -252,12 +257,12 @@ app.post("/purge", (req, res) => {
 app.post("/finish", (req, res) => {
     const uname = req.body["username"];
     const st = req.body["state"]; // Change this to match the name in your EJS template
-    const taskToFinish = taskActive.find(task => task.id === st);
+    const t = taskActive.find(t => t.id === st);
 
-    if (taskToFinish) 
+    if (t) 
     {
-        taskToFinish.isTaskDone = true;
-        taskToFinish.st = "finished";
+        t.isTaskDone = true;
+        t.st = "finished";
 
         // Assuming "add" is a function to save changes
         add();

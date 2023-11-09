@@ -1,0 +1,11 @@
+<div class="input-group mb-3">
+    <div class="input-group-text">
+        <form class="row g-3 needs-validation" action="/unfinish" method="POST">
+            <input type="hidden" name="state" value="<%- task.id %>">
+            <input type="hidden" name="username" value="<%= username %>">
+            <input type="checkbox" checked class="form-check-input mt-0" onChange="this.form.submit()"> <!--stackoverflow-->>
+
+        </form>
+    </div>
+    <input type="text" disabled class="form-control" placeholder="<%- task.text %>">
+</div>

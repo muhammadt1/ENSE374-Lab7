@@ -1,6 +1,6 @@
 [
     {
-        "_id": "1",
+        "id": "1",
         "text": "the unclaimed task",
         "state": "unfinished",
         "creator":"u1",
@@ -10,7 +10,7 @@
         "isTaskCleared":false
     },
     {
-        "_id": "2",
+        "id": "2",
         "text": "the task claimed by u1 and unfinished",
         "state": "unfinished",
         "creator":"u1",
@@ -21,7 +21,7 @@
 
     },
     {
-        "_id": "3",
+        "id": "3",
         "text": "the task claimed by u2 and unfinished",
         "state": "unfinished",
         "creator":"u1",
@@ -33,7 +33,7 @@
         
     },
     {
-        "_id": "4",
+        "id": "4",
         "text": "the task claimed by u1 and finished",
         "state": "finished",
         "creator":"u1",
@@ -44,7 +44,7 @@
 
     },
     {
-        "_id": "5",
+        "id": "5",
         "text": "the task claimed by u2 and finished",
         "state": "finished",
         "creator":"u1",

@@ -1,0 +1,15 @@
+<div class="input-group mb-3">
+    <div class="input-group-text">
+        <form class="row g-1 needs-validation" action="/finish" method="POST">
+            <input type="hidden" name="state" value="<%- task.id %>">
+            <input type="hidden" name="username" value="<%= username %>">
+            <input onChange="this.form.submit()" class="form-check-input mt-0" type="checkbox">
+        </form>
+    </div>
+    <input type="text" disabled class="form-control" placeholder="<%- task.text %>">
+    <form class="row g-3 needs-validation" action="/abandon" method="POST">
+        <input type="hidden" name="state" value="<%- task.id %>">
+        <input type="hidden" name="username" value="<%= username %>">
+        <button type="button" class="btn btn-outline-secondary"  id="button-addon2">Abandon</button>
+    </form>
+</div>
