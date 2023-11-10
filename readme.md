@@ -1,5 +1,5 @@
 # ENSE374-Lab7
-* Description
+* The objective of this lab was to implement EJS from the Node.js library and create templated HTML files for our ToDo list project. 
 * Included files/folders are: 
     * public
         * css
